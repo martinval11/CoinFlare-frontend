@@ -41,5 +41,6 @@ pnpm install
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
-- [Coingecko](https://www.coingecko.com/) - API
-- [NextJS](https://nextjs.org/) - NextJS# CryptoHub
+- [Coingecko API](https://www.coingecko.com/en/api/)
+- [NextJS](https://nextjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
