@@ -1,0 +1,39 @@
+.table {
+	border-collapse: collapse;
+}
+
+.table .header {
+	text-align: left;
+}
+
+.header th {
+	padding: 15px;
+	background: #1b1c1b;
+}
+
+.coin {
+	border-bottom: 1px solid #1d1f1d;
+}
+
+.coin .name {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+}
+
+.coin td {
+	padding: 10px 15px 5px;
+}
+
+.coin .name img {
+	width: 40px;
+	height: 40px;
+}
+
+.green {
+	color: #60df60;
+}
+
+.red {
+	color: #fa4a50;
+}

@@ -1,0 +1,25 @@
+.nav {
+	padding: 15px 20px;
+	margin-bottom: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: #1B1C1B;
+}
+
+.logo {
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+	color: inherit;
+	gap: 4px;
+}
+
+.logo:hover {
+	color: inherit !important;
+}
+
+.logo img {
+	width: 50px;
+	height: 50px;
+}
