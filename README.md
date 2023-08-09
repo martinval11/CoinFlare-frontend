@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="" rel="noopener">
+  <a href="https://github.com/martinval11/CryptoHub" rel="noopener">
  <img width=200px height=200px src="favicon.ico" alt="Project logo"></a>
 </p>
 
@@ -8,9 +8,9 @@
 <div align="center">
 
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/martinval11/CryptoHub/issues)
 [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/martinval11/CryptoHub/pulls)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
+[![Twitter](https://img.shields.io/twitter/follow/martinval11_?style=social&logo=twitter)](https://twitter.com/martinval11_)
 
 </div>
 
@@ -31,10 +31,11 @@
 ```sh
 git clone https://github.com/martinval11/CryptoHub
 cd CryptoHub
-pnpm install # or npm install
+pnpm install
 ```
 
 ## Scripts
+
 - `pnpm dev` - Initialize a dev environment
 - `pnpm build` - Build a prod environment
 
