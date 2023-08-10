@@ -11,10 +11,11 @@ body {
 }
 
 a {
+  text-decoration: none;
 	color: #aac9aa;
 }
 
 a:hover {
-	text-decoration: none;
+  text-decoration: underline;
 	color: #95ac95 !important;
 }

@@ -2,5 +2,14 @@
 	padding: 15px;
 	background: #1b1c1b;
 	text-align: center;
-	margin-top: 15px;
+	height: 10vh;
+	position: relative;
+	bottom: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.footer a {
+	margin-left: 3px;
 }

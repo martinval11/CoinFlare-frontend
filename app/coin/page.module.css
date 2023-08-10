@@ -1,0 +1,28 @@
+.chartContainer {
+	padding: 0 1rem;
+	height: 90vh;
+}
+
+.chartContainer h1,
+.chartContainer h2 {
+	font-weight: 400;
+}
+
+.chartContainer h1 {
+	font-size: 2.25rem;
+}
+
+.chart {
+	max-height: 400px;
+	margin-top: 25px;
+}
+
+.coinInfo div {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.coinInfo div small {
+	font-size: 1rem;
+}
