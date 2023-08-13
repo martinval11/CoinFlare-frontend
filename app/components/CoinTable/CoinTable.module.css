@@ -1,3 +1,7 @@
+.tableContainer {
+	overflow-x: auto;
+}
+
 .table {
 	border-collapse: collapse;
 }
@@ -36,4 +40,10 @@
 
 .red {
 	color: #fa4a50;
+}
+
+.center {
+	display: flex;
+	align-items: center;
+	gap: 5px;
 }

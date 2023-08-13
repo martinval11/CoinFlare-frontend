@@ -1,10 +1,12 @@
 import CoinTable from './components/CoinTable/CoinTable';
 import styles from './page.module.css';
 
-export default function Home({ data }: any) {
+const Home = () => {
 	return (
 		<main className={styles.main}>
       <CoinTable />
 		</main>
 	);
 }
+
+export default Home;
