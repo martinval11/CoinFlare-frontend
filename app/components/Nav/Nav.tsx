@@ -1,8 +1,24 @@
+'use client';
+
 import Link from 'next/link';
-import Image from 'next/image';
 import styles from './Nav.module.css';
 
+import { useState, useEffect } from 'react';
+
 const Nav = () => {
+	const [isAuth, setIsAuth] = useState(false);
+
+	const removeData = () => {
+		localStorage.removeItem('auth');
+		window.location.reload();
+	};
+
+	useEffect(() => {
+		if (localStorage.getItem('auth')) {
+			setIsAuth(true);
+		}
+	}, []);
+
 	return (
 		<nav className={styles.nav}>
 			<Link href="/" className={styles.logo}>
@@ -18,8 +34,16 @@ const Nav = () => {
 
 			<div className={styles.links}>
 				<Link href="/portfolio">Portfolio</Link>
-				<Link href="/login">Login</Link>
-				<Link href="/signup">Sign Up</Link>
+				{isAuth ? (
+					<Link href="/" onClick={removeData}>
+						Logout
+					</Link>
+				) : (
+					<>
+						<Link href="/login">Login</Link>
+						<Link href="/signup">Sign Up</Link>
+					</>
+				)}
 			</div>
 		</nav>
 	);

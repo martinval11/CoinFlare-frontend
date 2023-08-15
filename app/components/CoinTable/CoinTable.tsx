@@ -64,18 +64,20 @@ export default async function CoinTable() {
 									<StarIcon /> {coin.market_cap_rank}
 								</div>
 							</td>
-							<Link
-								href={{
-									pathname: '/coin',
-									query: {
-										id: coin.id,
-										price: coin.current_price,
-										symbol: coin.symbol,
-									},
-								}}
-								key={coin.id}
-							>
-								<td className={styles.name}>
+
+							<td className={styles.name}>
+								<Link
+									className={styles.link}
+									href={{
+										pathname: '/coin',
+										query: {
+											id: coin.id,
+											price: coin.current_price,
+											symbol: coin.symbol,
+										},
+									}}
+									key={coin.id}
+								>
 									<img
 										src={coin.image}
 										alt={coin.name}
@@ -84,8 +86,8 @@ export default async function CoinTable() {
 										height={40}
 									/>
 									{coin.name} <small>{coin.symbol.toUpperCase()}</small>
-								</td>
-							</Link>
+								</Link>
+							</td>
 
 							<td>${coin.current_price.toLocaleString()}</td>
 							<td
