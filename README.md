@@ -29,8 +29,8 @@
 ## 🏁 Setup <a name = "setup"></a>
 
 ```sh
-git clone https://github.com/martinval11/CryptoHub
-cd CryptoHub
+git clone https://github.com/martinval11/CryptoHub-frontend
+cd CryptoHub-frontend
 pnpm install
 ```
 
