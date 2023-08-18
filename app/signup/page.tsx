@@ -1,14 +1,14 @@
 'use client';
 
 import { FormEvent, useRef } from 'react';
-import Link from 'next/link';
-
-import styles from './page.module.css';
 
 import request from '../utils/request';
 
 import { API_URL } from '../consts/consts';
 import { encrypt } from '../utils/cipher';
+
+import { Link } from '@nextui-org/link';
+import { Input } from '@nextui-org/input';
 
 type ApiResponse = {
 	users: string[];
@@ -56,18 +56,18 @@ const SignUp = () => {
 	};
 
 	return (
-		<div className={styles.formContainer}>
-			<form onSubmit={createAccount} className={styles.form}>
+		<div className='flex justify-center'>
+			<form onSubmit={createAccount}>
 				<h1>Sign Up</h1>
 
-				<label>
+				<label className='block mt-1'>
 					<span>Username</span>
-					<input type="text" placeholder="Your Name" ref={userRef} required />
+					<Input type="text" placeholder="Your Name" ref={userRef} required />
 				</label>
 
-				<label>
+				<label className='block mt-2'>
 					<span>Email</span>
-					<input
+					<Input
 						type="email"
 						placeholder="example@gmail.com"
 						pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
@@ -77,9 +77,9 @@ const SignUp = () => {
 					/>
 				</label>
 
-				<label>
+				<label className='block mt-2'>
 					<span>Password</span>
-					<input
+					<Input
 						type="password"
 						minLength={8}
 						maxLength={30}
@@ -91,14 +91,14 @@ const SignUp = () => {
 					/>
 				</label>
 
-				<Link href="/signup" className={styles.link}>
+				<Link href="/login" className='block mt-3'>
 					Do you have an account? Login here
 				</Link>
 
-				<input
+				<Input
 					type="submit"
 					value="Create Account"
-					className={styles.submitButton}
+					className='block mt-2'
 				/>
 			</form>
 		</div>

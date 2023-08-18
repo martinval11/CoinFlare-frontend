@@ -1,23 +1,63 @@
-import './globals.css';
-import type { Metadata } from 'next';
-import Nav from './components/Nav/Nav';
-import Footer from './components/Footer/Footer';
+import "@/styles/globals.css";
+import { Metadata } from "next";
+import { siteConfig } from "@/config/site";
+import { fontSans } from "@/config/fonts";
+import { Providers } from "./providers";
+import { Navbar } from "@/components/navbar";
+import { Link } from "@nextui-org/link";
+import clsx from "clsx";
 
 export const metadata: Metadata = {
-	title: 'CryptoHub',
-	description: 'View cryptocurrency prices',
+	title: {
+		default: siteConfig.name,
+		template: `%s - ${siteConfig.name}`,
+	},
+	description: siteConfig.description,
+	themeColor: [
+		{ media: "(prefers-color-scheme: light)", color: "white" },
+		{ media: "(prefers-color-scheme: dark)", color: "black" },
+	],
+	icons: {
+		icon: "/favicon.ico",
+		shortcut: "/favicon-16x16.png",
+		apple: "/apple-touch-icon.png",
+	},
 };
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+export default function RootLayout({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
 	return (
-		<html lang="en">
-			<body>
-				<Nav />
-				{children}
-				<Footer />
+		<html lang="en" suppressHydrationWarning>
+			<head />
+			<body
+				className={clsx(
+					"min-h-screen bg-background font-sans antialiased",
+					fontSans.variable
+				)}
+			>
+				<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+					<div className="relative flex flex-col h-screen">
+						<Navbar />
+						<main className="container flex-grow px-6 pt-16 mx-auto max-w-7xl">
+							{children}
+						</main>
+						<footer className="flex items-center justify-center w-full py-3">
+							<Link
+								isExternal
+								className="flex items-center gap-1 text-current"
+								href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
+								title="nextui.org homepage"
+							>
+								<span className="text-default-600">Made with love by </span>
+								<p className="text-primary">Martínval11</p>
+							</Link>
+						</footer>
+					</div>
+				</Providers>
 			</body>
 		</html>
 	);
-};
-
-export default RootLayout;
+}
