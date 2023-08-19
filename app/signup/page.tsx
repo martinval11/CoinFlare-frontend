@@ -56,16 +56,16 @@ const SignUp = () => {
 	};
 
 	return (
-		<div className='flex justify-center'>
+		<div className="flex justify-center">
 			<form onSubmit={createAccount}>
 				<h1>Sign Up</h1>
 
-				<label className='block mt-1'>
+				<label className="block mt-1">
 					<span>Username</span>
 					<Input type="text" placeholder="Your Name" ref={userRef} required />
 				</label>
 
-				<label className='block mt-2'>
+				<label className="block mt-2">
 					<span>Email</span>
 					<Input
 						type="email"
@@ -77,7 +77,7 @@ const SignUp = () => {
 					/>
 				</label>
 
-				<label className='block mt-2'>
+				<label className="block mt-2">
 					<span>Password</span>
 					<Input
 						type="password"
@@ -91,14 +91,16 @@ const SignUp = () => {
 					/>
 				</label>
 
-				<Link href="/login" className='block mt-3'>
+				<Link href="/login" className="block mt-3">
 					Do you have an account? Login here
 				</Link>
 
 				<Input
 					type="submit"
 					value="Create Account"
-					className='block mt-2'
+					color="primary"
+					variant="flat"
+					className="block mt-2"
 				/>
 			</form>
 		</div>

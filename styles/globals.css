@@ -17,3 +17,17 @@ h2 {
   font-size: 26px;
   font-weight: 600;
 }
+
+h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+canvas {
+  display: block !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  height: 50px !important;
+  width: 150px !important;
+  margin: 0 !important;
+}

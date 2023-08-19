@@ -1,14 +1,8 @@
 'use client';
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
+import { Card, CardBody, Chip } from '@nextui-org/react';
 
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  Button,
-} from '@nextui-org/react';
 import { Input } from '@nextui-org/input';
 
 interface coin {
@@ -47,7 +41,7 @@ const Portfolio = () => {
   const [coins, setCoins] = useState([]);
   const [portfolio, setPortfolio]: any = useState([]);
 
-  const [crypto, setCrypto] = useState('');
+  const [crypto, setCrypto] = useState('bitcoin');
   const priceRef: any = useRef(0);
 
   const getCoins = async () => {
@@ -69,10 +63,11 @@ const Portfolio = () => {
     const findCoin: any = coins.find((coin: coin) => coin.id === crypto);
 
     if (findCoin) {
+      console.log(findCoin);
       setPortfolio([
         ...portfolio,
         {
-          name: crypto,
+          name: findCoin.name,
           id: findCoin.id,
           priceUSDToCrypto:
             Number(priceRef.current.value) / findCoin.current_price,
@@ -82,6 +77,9 @@ const Portfolio = () => {
               findCoin.current_price
             ).toFixed(6)
           ),
+          symbol: findCoin.symbol,
+          image: findCoin.image,
+          price_change_percentage_24h: findCoin.price_change_percentage_24h,
         },
       ]);
     }
@@ -101,57 +99,88 @@ const Portfolio = () => {
     <main>
       {isAuth ? (
         <div className="flex justify-center">
-          <section className='w-full'>
+          <section className="w-full md:w-7/12">
             <h1>Portfolio</h1>
             <form onSubmit={submitPortfolio}>
-              <h2 className='mt-1'>Add a cryptocurrency</h2>
+              <h2 className="mt-1">Add a cryptocurrency</h2>
 
-              <label className="flex flex-col block">
+              <label className="flex flex-col block mt-3">
                 <span>Select a cryptocurrency</span>
-                <Dropdown>
-                  <DropdownTrigger>
-                    <Button variant="bordered">
-                      {crypto ? crypto : 'Select a cryptocurrency'}
-                    </Button>
-                  </DropdownTrigger>
-                  <DropdownMenu
-                    aria-label="Action event example"
-                    onAction={(key: any) => setCrypto(key)}
-                  >
-                    {coins.map((coin: coin) => (
-                      <DropdownItem key={coin.id} value={coin.id}>
-                        {coin.name}
-                      </DropdownItem>
-                    ))}
-                  </DropdownMenu>
-                </Dropdown>
+                <select
+                  className="relative w-full inline-flex flex-row items-center shadow-sm px-3 gap-3 bg-default-100 data-[hover=true]:bg-default-200 group-data-[focus=true]:bg-default-100 h-unit-10 min-h-unit-10 rounded-medium transition-background motion-reduce:transition-none !duration-150 outline-none group-data-[focus-visible=true]:z-10 group-data-[focus-visible=true]:ring-2 group-data-[focus-visible=true]:ring-focus group-data-[focus-visible=true]:ring-offset-2 group-data-[focus-visible=true]:ring-offset-background is-filled"
+                  onChange={selectCryptoChange}
+                  value={crypto}
+                  required
+                >
+                  {coins.map((coin: coin) => (
+                    <option key={coin.id} value={coin.id}>
+                      {coin.name}
+                    </option>
+                  ))}
+                </select>
               </label>
 
               <label className="block mt-3">
                 <span>Quantity</span>
-                <Input type="text" ref={priceRef} required />
+                <Input type="text" ref={priceRef} isRequired />
               </label>
 
-              <Input type="submit" value="Add" className='mt-3' />
+              <Input
+                color="primary"
+                variant="flat"
+                type="submit"
+                value="Add"
+                className="mt-3"
+              />
             </form>
 
-            <div>
+            <div className="mt-3">
               <h2>Balance</h2>
-              <p>
+              <h3>
                 $
                 {portfolio.reduce((acc: number, coin: coin) => {
                   return acc + Number(coin.priceCryptoToUSD);
                 }, 0)}
-              </p>
+              </h3>
               {portfolio.length === 0 ? (
                 <p>No coins added</p>
               ) : (
                 portfolio.map((coin: coin) => (
-                  <>
-                    <p key={coin.id}>
-                      {coin.name} - ${coin.priceUSDToCrypto}
-                    </p>
-                  </>
+                  <Card className="mt-2">
+                    <CardBody>
+                      <div
+                        id="container"
+                        className="flex items-center justify-between"
+                      >
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={coin.image}
+                            alt={coin.name}
+                            loading="lazy"
+                            width={40}
+                            height={40}
+                          />
+                          <b>{coin.name}</b>
+                        </div>
+                        <div className="flex flex-col items-end">
+                          <b>
+                            {coin.priceUSDToCrypto} {coin.symbol.toUpperCase()}
+                          </b>
+                          <small>{coin.priceCryptoToUSD} USD</small>
+
+                          {coin.price_change_percentage_24h > 0 ? (
+                            <Chip color="success" variant="flat">
+                              +{coin.price_change_percentage_24h}%
+                            </Chip>
+                          ) : (
+                            <Chip color="danger" variant="flat">
+                              {coin.price_change_percentage_24h}%
+                            </Chip>
+                          )}
+                        </div>
+                      </div>
+                    </CardBody>
+                  </Card>
                 ))
               )}
             </div>

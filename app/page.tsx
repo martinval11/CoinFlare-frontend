@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Table,
@@ -7,18 +7,26 @@ import {
   TableCell,
   TableRow,
   TableBody,
-} from "@nextui-org/react";
-import { useEffect, useState } from "react";
-import Link from "next/link";
+  Spinner,
+  Chip,
+} from '@nextui-org/react';
 
-export default function Home() {
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import CryptoChart from '@/components/CryptoChart';
+
+const Home = () => {
   const [coins, setCoins] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const getCoins = async () => {
     const res = await fetch(
-      "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en"
+      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=%221h%2C%2024h%2C%207d%22&locale=en'
     );
     const coins = await res.json();
 
+    console.log(coins)
+    setIsLoading(false);
     setCoins(coins);
     return coins;
   };
@@ -28,23 +36,28 @@ export default function Home() {
   }, []);
 
   return (
-    <Table aria-label="Example table with dynamic content">
+    <Table aria-label="Coins data">
       <TableHeader>
         <TableColumn>#</TableColumn>
         <TableColumn>Coin</TableColumn>
         <TableColumn>Price</TableColumn>
         <TableColumn>24h</TableColumn>
         <TableColumn>Market Cap</TableColumn>
+        <TableColumn>Last 7 days</TableColumn>
       </TableHeader>
-      <TableBody items={coins}>
+      <TableBody
+        items={coins}
+        isLoading={isLoading}
+        loadingContent={<Spinner label="Loading..." />}
+      >
         {(coin: any) => (
           <TableRow key={coin.id}>
             <TableCell>{coin.market_cap_rank}</TableCell>
             <TableCell>
               <Link
-                className='coinName'
+                className="coinName"
                 href={{
-                  pathname: "/coin",
+                  pathname: '/coin',
                   query: {
                     id: coin.id,
                     price: coin.current_price,
@@ -64,11 +77,30 @@ export default function Home() {
               </Link>
             </TableCell>
             <TableCell>${coin.current_price.toLocaleString()}</TableCell>
-            <TableCell>{coin.price_change_percentage_24h}%</TableCell>
+            {coin.price_change_percentage_24h > 0 ? (
+              <TableCell>
+                <Chip color="success" variant="flat">
+                  +{coin.price_change_percentage_24h}%
+                </Chip>
+              </TableCell>
+            ) : (
+              <TableCell>
+                <Chip color="danger" variant="flat">
+                  {coin.price_change_percentage_24h}%
+                </Chip>
+              </TableCell>
+            )}
+
             <TableCell>${coin.market_cap.toLocaleString()}</TableCell>
+
+            <TableCell className='w-44'>
+              <CryptoChart coinData={coin.sparkline_in_7d.price} />
+            </TableCell>
           </TableRow>
         )}
       </TableBody>
     </Table>
   );
-}
+};
+
+export default Home;

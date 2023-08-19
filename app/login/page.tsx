@@ -65,9 +65,17 @@ const Login = () => {
           />
         </label>
 
-        <Link href="/signup" className='block mt-3'>You don&apos;t have an account? Sign up here</Link>
+        <Link href="/signup" className="block mt-3">
+          You don&apos;t have an account? Sign up here
+        </Link>
 
-        <Input type="submit" value="Login" className='block mt-3' />
+        <Input
+          type="submit"
+          value="Login"
+          color="primary"
+          variant="flat"
+          className="block mt-3"
+        />
       </form>
     </div>
   );

@@ -1,11 +1,12 @@
-import "@/styles/globals.css";
-import { Metadata } from "next";
-import { siteConfig } from "@/config/site";
-import { fontSans } from "@/config/fonts";
-import { Providers } from "./providers";
-import { Navbar } from "@/components/navbar";
-import { Link } from "@nextui-org/link";
-import clsx from "clsx";
+import '@/styles/globals.css';
+import { Metadata } from 'next';
+import { siteConfig } from '@/config/site';
+import { fontSans } from '@/config/fonts';
+import { Providers } from './providers';
+import { Navbar } from '@/components/navbar';
+import { Link } from '@nextui-org/link';
+import clsx from 'clsx';
+import { HeartFilledIcon } from '@/components/icons';
 
 export const metadata: Metadata = {
 	title: {
@@ -14,13 +15,13 @@ export const metadata: Metadata = {
 	},
 	description: siteConfig.description,
 	themeColor: [
-		{ media: "(prefers-color-scheme: light)", color: "white" },
-		{ media: "(prefers-color-scheme: dark)", color: "black" },
+		{ media: '(prefers-color-scheme: light)', color: 'white' },
+		{ media: '(prefers-color-scheme: dark)', color: 'black' },
 	],
 	icons: {
-		icon: "/favicon.ico",
-		shortcut: "/favicon-16x16.png",
-		apple: "/apple-touch-icon.png",
+		icon: '/favicon.ico',
+		shortcut: '/favicon-16x16.png',
+		apple: '/apple-touch-icon.png',
 	},
 };
 
@@ -34,26 +35,27 @@ export default function RootLayout({
 			<head />
 			<body
 				className={clsx(
-					"min-h-screen bg-background font-sans antialiased",
+					'min-h-screen bg-background font-sans antialiased',
 					fontSans.variable
 				)}
 			>
-				<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+				<Providers themeProps={{ attribute: 'class', defaultTheme: 'dark' }}>
 					<div className="relative flex flex-col h-screen">
 						<Navbar />
 						<main className="container flex-grow px-6 pt-16 mx-auto max-w-7xl">
 							{children}
 						</main>
 						<footer className="flex items-center justify-center w-full py-3">
-							<Link
-								isExternal
-								className="flex items-center gap-1 text-current"
-								href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
-								title="nextui.org homepage"
-							>
-								<span className="text-default-600">Made with love by </span>
-								<p className="text-primary">Martínval11</p>
-							</Link>
+							<span className="flex text-default-600 gap-1">
+								Made with <HeartFilledIcon /> by{' '}
+								<Link
+									href="https://github.com/martinval11"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									Martínval11
+								</Link>
+							</span>
 						</footer>
 					</div>
 				</Providers>

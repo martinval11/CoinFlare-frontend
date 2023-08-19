@@ -18,7 +18,6 @@ import { link as linkStyles } from '@nextui-org/theme';
 
 import { siteConfig } from '@/config/site';
 import NextLink from 'next/link';
-import clsx from 'clsx';
 import { useState, useEffect } from 'react';
 
 import { ThemeSwitch } from '@/components/theme-switch';
@@ -70,22 +69,6 @@ export const Navbar = () => {
 						<p className="font-bold text-inherit">CryptoHub</p>
 					</NextLink>
 				</NavbarBrand>
-				<ul className="justify-start hidden ml-2 lg:flex gap-4">
-					{siteConfig.navItems.map((item) => (
-						<NavbarItem key={item.href}>
-							<NextLink
-								className={clsx(
-									linkStyles({ color: 'foreground' }),
-									'data-[active=true]:text-primary data-[active=true]:font-medium'
-								)}
-								color="foreground"
-								href={item.href}
-							>
-								{item.label}
-							</NextLink>
-						</NavbarItem>
-					))}
-				</ul>
 			</NavbarContent>
 
 			<NavbarContent
@@ -102,7 +85,7 @@ export const Navbar = () => {
 
 				<Link href="/portfolio">Portfolio</Link>
 				{isAuth ? (
-					<Button href="/" onClick={removeData}>
+					<Button color="primary" href="/" onClick={removeData}>
 						Logout
 					</Button>
 				) : (
@@ -136,23 +119,46 @@ export const Navbar = () => {
 			<NavbarMenu>
 				{searchInput}
 				<div className="flex flex-col mx-4 mt-2 gap-2">
-					{siteConfig.navMenuItems.map((item, index) => (
-						<NavbarMenuItem key={`${item}-${index}`}>
-							<Link
-								color={
+					<NavbarMenuItem>
+						<Link href="/" size="lg">
+							Home
+						</Link>
+					</NavbarMenuItem>
+					{/*color={
 									index === 2
 										? 'primary'
 										: index === siteConfig.navMenuItems.length - 1
 										? 'danger'
 										: 'foreground'
-								}
-								href="#"
-								size="lg"
-							>
-								{item.label}
+										}*/}
+
+					<NavbarMenuItem>
+						<Link href="/portfolio" size="lg">
+							Portfolio
+						</Link>
+					</NavbarMenuItem>
+
+					{isAuth ? (
+						<NavbarMenuItem>
+							<Link href="/portfolio" size="lg">
+								Logout
 							</Link>
 						</NavbarMenuItem>
-					))}
+					) : (
+						<>
+							<NavbarMenuItem>
+								<Link href="/login" size="lg">
+									Login
+								</Link>
+							</NavbarMenuItem>
+
+							<NavbarMenuItem>
+								<Link href="/portfolio" size="lg">
+									Sign Up
+								</Link>
+							</NavbarMenuItem>
+						</>
+					)}
 				</div>
 			</NavbarMenu>
 		</NextUINavbar>

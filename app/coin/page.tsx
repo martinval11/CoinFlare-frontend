@@ -14,9 +14,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import { useEffect, useState } from 'react';
 
-import styles from './page.module.css';
-
-export default function Coin() {
+const Coin = () => {
 	const [coinData, setCoinData]: any = useState([]);
 	const searchParams = useSearchParams();
 	const coinName: any = searchParams.get('id');
@@ -35,6 +33,14 @@ export default function Coin() {
 
 	const options = {
 		responsive: true,
+		layout: {
+			padding: {
+				left: 0,
+				right: 0,
+				top: 0,
+				bottom: 0,
+			},
+		},
 		plugins: {
 			legend: {
 				display: false,
@@ -61,26 +67,26 @@ export default function Coin() {
 		labels,
 		datasets: [
 			{
-				label: 'Dataset 1',
-				data: [
-					coinData?.prices?.at(-1)[1],
-					coinData?.prices?.at(-2)[1],
-					coinData?.prices?.at(-3)[1],
-					coinData?.prices?.at(-4)[1],
-					coinData?.prices?.at(-5)[1],
-					coinData?.prices?.at(-6)[1],
-					coinData?.prices?.at(-7)[1],
-				],
+				label: '$',
+				pointRadius: 0,
+				pointHitRadius: 10,
+				lineTension: 0.2,
+				borderWidth: 4,
+				borderJoinStyle: 'round',
+				borderCapStyle: 'round',
+				data: coinData?.prices?.map((item: any) => [item[0], item[1]]),
 				borderColor: '#60df60',
 				backgroundColor: '#60df60',
 			},
 		],
 	};
+
 	const getCoinData = async () => {
 		const res = await fetch(
 			`https://api.coingecko.com/api/v3/coins/${coinName}/market_chart?vs_currency=usd&days=7`
 		);
 		const coins = await res.json();
+		console.log(coins);
 		setCoinData(coins);
 	};
 
@@ -89,19 +95,17 @@ export default function Coin() {
 	}, []);
 
 	return (
-		<main className={styles.chartContainer}>
-			<div className={styles.coinInfo}>
-				<div>
+		<main>
+			<div>
+				<div className="flex">
 					<h1>{coinName.charAt(0).toUpperCase() + coinName.slice(1)}</h1>
 					<small>{coinSymbol.toUpperCase()}</small>
 				</div>
 				<h2>Current Price: ${coinPrice}</h2>
 			</div>
-			<Line
-				options={options}
-				data={data}
-				className={styles.chart}
-			/>
+			<Line options={options} data={data} className="mt-5" />
 		</main>
 	);
-}
+};
+
+export default Coin;
