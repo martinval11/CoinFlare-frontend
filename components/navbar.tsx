@@ -14,8 +14,6 @@ import { Kbd } from '@nextui-org/kbd';
 import { Link } from '@nextui-org/link';
 import { Input } from '@nextui-org/input';
 
-import { link as linkStyles } from '@nextui-org/theme';
-
 import { siteConfig } from '@/config/site';
 import NextLink from 'next/link';
 import { useState, useEffect } from 'react';
@@ -124,13 +122,6 @@ export const Navbar = () => {
 							Home
 						</Link>
 					</NavbarMenuItem>
-					{/*color={
-									index === 2
-										? 'primary'
-										: index === siteConfig.navMenuItems.length - 1
-										? 'danger'
-										: 'foreground'
-										}*/}
 
 					<NavbarMenuItem>
 						<Link href="/portfolio" size="lg">
@@ -140,7 +131,7 @@ export const Navbar = () => {
 
 					{isAuth ? (
 						<NavbarMenuItem>
-							<Link href="/portfolio" size="lg">
+							<Link href="/" size="lg" onClick={removeData}>
 								Logout
 							</Link>
 						</NavbarMenuItem>

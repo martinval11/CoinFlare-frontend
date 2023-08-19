@@ -74,6 +74,7 @@ const CryptoChart = ({ coinData }: any) => {
 			{
 				label: '$',
 				borderWidth: 6,
+				pointStyle: false,
 				data: coinData,
 				borderColor: '#60df60',
 				backgroundColor: '#60df60',

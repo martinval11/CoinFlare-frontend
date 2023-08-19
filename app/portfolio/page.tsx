@@ -4,6 +4,8 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Card, CardBody, Chip } from '@nextui-org/react';
 
 import { Input } from '@nextui-org/input';
+import { API_URL } from '../consts/consts';
+import request from '../utils/request';
 
 interface coin {
   id: string;
@@ -54,17 +56,27 @@ const Portfolio = () => {
     return coins;
   };
 
+  const getPortfolio = async () => {
+    const userAuth: any = localStorage.getItem('auth');
+    const user = JSON.parse(userAuth);
+    const res = await fetch(`${API_URL}/user/${user._id}`);
+    const portfolio = await res.json();
+    console.log(portfolio.portfolio);
+    setPortfolio(portfolio.portfolio);
+    return portfolio.portfolio;
+  }
+
   const selectCryptoChange = (event: any) => {
     setCrypto(event.currentTarget.value);
   };
 
-  const submitPortfolio = (event: FormEvent) => {
+  const submitPortfolio = async (event: FormEvent) => {
     event.preventDefault();
     const findCoin: any = coins.find((coin: coin) => coin.id === crypto);
 
     if (findCoin) {
-      console.log(findCoin);
-      setPortfolio([
+      let portfolioWithNoDelay = [];
+      portfolioWithNoDelay = [
         ...portfolio,
         {
           name: findCoin.name,
@@ -80,8 +92,22 @@ const Portfolio = () => {
           symbol: findCoin.symbol,
           image: findCoin.image,
           price_change_percentage_24h: findCoin.price_change_percentage_24h,
+        }
+      ]
+
+      setPortfolio(portfolioWithNoDelay);
+
+      const userAuth: any = localStorage.getItem('auth');
+      const user = JSON.parse(userAuth);
+      await request(`${API_URL}/updateUser/${user._id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      ]);
+        body: JSON.stringify({
+          portfolio: portfolioWithNoDelay,
+        }),
+      })
     }
   };
 
@@ -92,6 +118,7 @@ const Portfolio = () => {
       return;
     }
     setIsAuth(true);
+    getPortfolio();
     getCoins();
   }, []);
 
@@ -121,7 +148,7 @@ const Portfolio = () => {
               </label>
 
               <label className="block mt-3">
-                <span>Quantity</span>
+                <span>Quantity (In USD)</span>
                 <Input type="text" ref={priceRef} isRequired />
               </label>
 
@@ -146,7 +173,7 @@ const Portfolio = () => {
                 <p>No coins added</p>
               ) : (
                 portfolio.map((coin: coin) => (
-                  <Card className="mt-2">
+                  <Card className="mt-2" key={coin.name}>
                     <CardBody>
                       <div
                         id="container"

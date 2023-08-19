@@ -40,7 +40,7 @@ const Login = () => {
     }
     localStorage.setItem(
       'auth',
-      JSON.stringify({ state: true, name: user.name })
+      JSON.stringify({ state: true, name: user.name, _id: user._id })
     );
     window.location.pathname = '';
   };
