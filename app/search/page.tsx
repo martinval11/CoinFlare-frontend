@@ -17,7 +17,7 @@ import {
 import CryptoChart from '@/components/CryptoChart';
 
 const SearchPage = () => {
-  const [coin, setCoin] = useState([]);
+  const [coin, setCoin]: any = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const coinParams = useSearchParams();
   const coinName: any = coinParams.get('coin');
