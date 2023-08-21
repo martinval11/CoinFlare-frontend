@@ -29,6 +29,9 @@ const Home = () => {
       return alert('Coins not found.');
     }
 
+    // cache coins
+    localStorage.setItem('coins', JSON.stringify(coins));
+
     setIsLoading(false);
     setCoins(coins);
     return coins;

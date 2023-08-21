@@ -1,23 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
-import {
-  Card,
-  CardBody,
-  Chip,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  useDisclosure,
-  Input,
-} from '@nextui-org/react';
+import { Input } from '@nextui-org/react';
 
 import PortfolioCoin from '@/components/PortfolioCoin';
 import { API_URL } from '../consts/consts';
@@ -61,19 +45,27 @@ const Portfolio = () => {
   const [isAuth, setIsAuth] = useState(false);
   const [coins, setCoins] = useState([]);
   const [portfolio, setPortfolio]: any = useState([]);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const [crypto, setCrypto] = useState('bitcoin');
   const priceRef: any = useRef(0);
 
   const getCoins = async () => {
-    const res = await fetch(
-      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en'
-    );
-    const coins = await res.json();
+    try {
+      const res = await fetch(
+        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en'
+      );
 
-    setCoins(coins);
-    return coins;
+      if (!res.ok) {
+        alert(Error);
+        throw new Error(`Error: ${res.status}`);
+      }
+      const coins = await res.json();
+
+      setCoins(coins);
+      return coins;
+    } catch (error: any) {
+      throw new Error(error);
+    }
   };
 
   const getPortfolio = async () => {
@@ -170,7 +162,14 @@ const Portfolio = () => {
 
               <label className="block mt-3">
                 <span>Quantity (In USD)</span>
-                <Input type="text" ref={priceRef} isRequired />
+                <Input
+                  type="text"
+                  ref={priceRef}
+                  placeholder="100"
+                  pattern="^\d+(.\d+)?$"
+                  title="Only numbers allowed. For example: 100, 100.5, 00010.0"
+                  isRequired
+                />
               </label>
 
               <Input
@@ -193,7 +192,13 @@ const Portfolio = () => {
               {portfolio.length === 0 ? (
                 <p>No coins added</p>
               ) : (
-                portfolio.map((coin: coin) => <PortfolioCoin coin={coin} />)
+                portfolio.map((coin: coin) => (
+                  <PortfolioCoin
+                    coin={coin}
+                    key={coin.id}
+                    onChangeData={getPortfolio}
+                  />
+                ))
               )}
             </div>
           </section>

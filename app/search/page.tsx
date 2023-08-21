@@ -23,21 +23,28 @@ const SearchPage = () => {
   const coinName: any = coinParams.get('coin');
 
   const getCoinData = async () => {
-    const res = await fetch(
-      `https://api.coingecko.com/api/v3/coins/${coinName}?sparkline=true`
-    );
-    const data = await res.json();
+    try {
+      const res = await fetch(
+        `https://api.coingecko.com/api/v3/coins/${coinName}?sparkline=true`
+      );
+      const data: any = await res.json();
 
-    if (data.error) {
-      return alert('Coin not found.');
+      if (!res.ok) {
+        throw new Error(`Error: ${data.error}`);
+      }
+      if (data.error) {
+        return alert('Coin not found.');
+      }
+
+      setCoin([data]);
+      setIsLoading(false);
+    } catch (error: any) {
+      alert('Error');
+      throw new Error(error);
     }
-
-    setCoin([data]);
-    setIsLoading(false);
   };
 
   useEffect(() => {
-    console.log(coinName);
     setCoin([]);
     getCoinData();
   }, [coinName]);

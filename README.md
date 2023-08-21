@@ -1,9 +1,9 @@
 <p align="center">
-  <a href="https://github.com/martinval11/CryptoHub" rel="noopener">
- <img width=200px height=200px src="favicon.ico" alt="Project logo"></a>
+  <a href="https://github.com/martinval11/CoinFlare-frontend" rel="noopener">
+ <img width=200px height=200px src="favicon.ico" alt="CoinFlare Logo"></a>
 </p>
 
-<h3 align="center">CryptoHub</h3>
+<h3 align="center">CoinFlare</h3>
 
 <div align="center">
 
@@ -29,8 +29,8 @@
 ## 🏁 Setup <a name = "setup"></a>
 
 ```sh
-git clone https://github.com/martinval11/CryptoHub-frontend
-cd CryptoHub-frontend
+git clone https://github.com/martinval11/CoinFlare-frontend
+cd CoinFlare-frontend
 pnpm install
 ```
 

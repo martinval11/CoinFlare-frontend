@@ -34,7 +34,7 @@ const SignUp = () => {
 			alert('Username already exist');
 			return;
 		}
-		const res = await request<ApiResponse>(`${API_URL}/createUser`, {
+		const res: any = await request<ApiResponse>(`${API_URL}/createUser`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -46,10 +46,9 @@ const SignUp = () => {
 				portfolio: [],
 			}),
 		});
-
 		localStorage.setItem(
 			'auth',
-			JSON.stringify({ state: true, name: res[0].name, _id: res[0]._id })
+			JSON.stringify({ state: true, name: res.name, _id: res._id })
 		);
 
 		window.location.pathname = '/';

@@ -20,13 +20,13 @@ import request from '@/app/utils/request';
 import { API_URL } from '@/app/consts/consts';
 import { useRef } from 'react';
 
-const PortfolioCoin = ({ coin }: any) => {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+const PortfolioCoin = ({ coin, onChangeData }: any) => {
+  const modifyModal = useDisclosure();
+  const deleteModal = useDisclosure();
+
   const newPrice: any = useRef(null);
 
   const updateCryptoPrice = async (event: any) => {
-    /// NOT TESTED...
-
     const userAuth: any = localStorage.getItem('auth');
     const userData: any = JSON.parse(userAuth);
     const userId = userData._id;
@@ -37,37 +37,68 @@ const PortfolioCoin = ({ coin }: any) => {
     const res = await fetch(`${API_URL}/user/${userId}`);
     const data = await res.json();
 
-    console.log(data);
     // find the coin in the portfolio object
     const coinIndex = data.portfolio.findIndex(
       (coin: any) => coin.id === coinName
     );
-    console.log(coinIndex);
 
     // update the price of the coin in the portfolio object
     data.portfolio[coinIndex].priceCryptoToUSD = Number(newPrice.current.value);
 
     // update the crypto price
-    const priceUSDToCrypto = Number(
-      (
-        (Number(newPrice.current.value) / data.current_price) *
-        data.current_price
-      ).toFixed(6)
-    );
-    data.portfolio[coinIndex].priceUSDToCrypto = priceUSDToCrypto;
+    // get the current price from local storage 'coins'
+
+    const localCoinPrices: any = localStorage.getItem('coins');
+    const localCoins: any = JSON.parse(localCoinPrices);
+    const coinLocal = localCoins.find((coin: any) => coin.id === coinName);
+    const priceUSDToCryptoServer =
+      Number(newPrice.current.value) / coinLocal.current_price;
+
+    data.portfolio[coinIndex].priceUSDToCrypto = priceUSDToCryptoServer;
 
     // send the updated portfolio object to the server
-    const requestToServer: any = await request(`${API_URL}/user/${userId}`, {
+    await request(`${API_URL}/updateUser/${userId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    })
-    const response = await requestToServer.json();
-    console.log(response);
+    });
 
-    console.log(data);
+    onChangeData();
+    modifyModal.onOpenChange();
+  };
+
+  const deleteCoin = async (event: any) => {
+    const userAuth: any = localStorage.getItem('auth');
+    const userData: any = JSON.parse(userAuth);
+    const userId = userData._id;
+
+    const coinName = event.target.id;
+
+    // get individual user
+    const res = await fetch(`${API_URL}/user/${userId}`);
+    const data = await res.json();
+
+    // find the coin in the portfolio object
+    const coinIndex = data.portfolio.findIndex(
+      (coin: any) => coin.id === coinName
+    );
+
+    // delete the coin from the portfolio object
+    data.portfolio.splice(coinIndex, 1);
+
+    // send the updated portfolio object to the server
+    await request(`${API_URL}/updateUser/${userId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    onChangeData();
+    deleteModal.onOpenChange();
   };
 
   return (
@@ -124,7 +155,11 @@ const PortfolioCoin = ({ coin }: any) => {
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Menu">
-                  <DropdownItem key="modify" id={coin.id} onPress={onOpen}>
+                  <DropdownItem
+                    key="modify"
+                    id={coin.id}
+                    onPress={modifyModal.onOpen}
+                  >
                     Modify
                   </DropdownItem>
                   <DropdownItem
@@ -132,6 +167,7 @@ const PortfolioCoin = ({ coin }: any) => {
                     className="text-danger"
                     color="danger"
                     id={coin.id}
+                    onPress={deleteModal.onOpen}
                   >
                     Delete
                   </DropdownItem>
@@ -142,7 +178,11 @@ const PortfolioCoin = ({ coin }: any) => {
         </CardBody>
       </Card>
 
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+      <Modal
+        isOpen={modifyModal.isOpen}
+        onOpenChange={modifyModal.onOpenChange}
+        placement="center"
+      >
         <ModalContent>
           {(onClose) => (
             <>
@@ -167,6 +207,33 @@ const PortfolioCoin = ({ coin }: any) => {
                   id={coin.id}
                 >
                   Save
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+      <Modal
+        isOpen={deleteModal.isOpen}
+        onOpenChange={deleteModal.onOpenChange}
+        placement="top-center"
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Are you sure?
+              </ModalHeader>
+              <ModalBody>
+                <p>Are you sure you want to delete this coin?</p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="flat" onPress={onClose}>
+                  Cancel
+                </Button>
+                <Button color="primary" onPress={deleteCoin} id={coin.id}>
+                  Delete
                 </Button>
               </ModalFooter>
             </>

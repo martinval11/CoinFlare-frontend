@@ -1,13 +1,11 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-	name: 'CryptoHub',
+	name: 'CoinFlare',
 	description: 'View Crypto Prices.',
 	links: {
-		github: 'https://github.com/martinval11/CryptoHub-frontend',
-		twitter: 'https://twitter.com/getnextui',
-		docs: 'https://nextui.org',
-		discord: 'https://discord.gg/9b6yyZKmH4',
+		github: 'https://github.com/martinval11/CoinFlare',
+		twitter: 'https://twitter.com/martinval11_',
 		signup: '/signup',
 	},
 };
