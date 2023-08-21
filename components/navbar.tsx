@@ -10,21 +10,23 @@ import {
 	NavbarMenuItem,
 } from '@nextui-org/navbar';
 import { Button } from '@nextui-org/button';
-import { Kbd } from '@nextui-org/kbd';
 import { Link } from '@nextui-org/link';
 import { Input } from '@nextui-org/input';
 
 import { siteConfig } from '@/config/site';
 import NextLink from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent, useRef } from 'react';
 
 import { ThemeSwitch } from '@/components/theme-switch';
 import { GithubIcon, SearchIcon } from '@/components/icons';
 
 import { Logo } from '@/components/icons';
+import {useRouter} from 'next/navigation';
 
 export const Navbar = () => {
 	const [isAuth, setIsAuth] = useState(false);
+	const searchInputRef: any = useRef(null);
+	const router = useRouter();
 
 	const removeData = () => {
 		localStorage.removeItem('auth');
@@ -37,25 +39,28 @@ export const Navbar = () => {
 		}
 	}, []);
 
+	const searchSubmit = (event: FormEvent) => {
+		event.preventDefault();
+		router.push(`/search?coin=${searchInputRef.current.value.toLowerCase()}`);
+	};
+
 	const searchInput = (
-		<Input
-			aria-label="Search"
-			classNames={{
-				inputWrapper: 'bg-default-100',
-				input: 'text-sm',
-			}}
-			endContent={
-				<Kbd className="hidden lg:inline-block" keys={['command']}>
-					K
-				</Kbd>
-			}
-			labelPlacement="outside"
-			placeholder="Search..."
-			startContent={
-				<SearchIcon className="flex-shrink-0 text-base pointer-events-none text-default-400" />
-			}
-			type="search"
-		/>
+		<form onSubmit={searchSubmit}>
+			<Input
+				aria-label="Search"
+				classNames={{
+					inputWrapper: 'bg-default-100',
+					input: 'text-sm',
+				}}
+				labelPlacement="outside"
+				placeholder="Search..."
+				startContent={
+					<SearchIcon className="flex-shrink-0 text-base pointer-events-none text-default-400" />
+				}
+				type="search"
+				ref={searchInputRef}
+			/>
+		</form>
 	);
 
 	return (

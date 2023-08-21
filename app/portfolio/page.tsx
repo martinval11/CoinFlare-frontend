@@ -1,9 +1,25 @@
 'use client';
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
-import { Card, CardBody, Chip } from '@nextui-org/react';
+import {
+  Card,
+  CardBody,
+  Chip,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+  Input,
+} from '@nextui-org/react';
 
-import { Input } from '@nextui-org/input';
+import PortfolioCoin from '@/components/PortfolioCoin';
 import { API_URL } from '../consts/consts';
 import request from '../utils/request';
 
@@ -36,12 +52,16 @@ interface coin {
   last_updated: string;
   priceCryptoToUSD: number;
   priceUSDToCrypto: number;
+  sparkline_in_7d: {
+    price: number[];
+  };
 }
 
 const Portfolio = () => {
   const [isAuth, setIsAuth] = useState(false);
   const [coins, setCoins] = useState([]);
   const [portfolio, setPortfolio]: any = useState([]);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const [crypto, setCrypto] = useState('bitcoin');
   const priceRef: any = useRef(0);
@@ -61,10 +81,10 @@ const Portfolio = () => {
     const user = JSON.parse(userAuth);
     const res = await fetch(`${API_URL}/user/${user._id}`);
     const portfolio = await res.json();
-    console.log(portfolio.portfolio);
+
     setPortfolio(portfolio.portfolio);
     return portfolio.portfolio;
-  }
+  };
 
   const selectCryptoChange = (event: any) => {
     setCrypto(event.currentTarget.value);
@@ -92,8 +112,9 @@ const Portfolio = () => {
           symbol: findCoin.symbol,
           image: findCoin.image,
           price_change_percentage_24h: findCoin.price_change_percentage_24h,
-        }
-      ]
+          current_price: findCoin.current_price,
+        },
+      ];
 
       setPortfolio(portfolioWithNoDelay);
 
@@ -107,7 +128,7 @@ const Portfolio = () => {
         body: JSON.stringify({
           portfolio: portfolioWithNoDelay,
         }),
-      })
+      });
     }
   };
 
@@ -172,43 +193,7 @@ const Portfolio = () => {
               {portfolio.length === 0 ? (
                 <p>No coins added</p>
               ) : (
-                portfolio.map((coin: coin) => (
-                  <Card className="mt-2" key={coin.name}>
-                    <CardBody>
-                      <div
-                        id="container"
-                        className="flex items-center justify-between"
-                      >
-                        <div className="flex items-center gap-2">
-                          <img
-                            src={coin.image}
-                            alt={coin.name}
-                            loading="lazy"
-                            width={40}
-                            height={40}
-                          />
-                          <b>{coin.name}</b>
-                        </div>
-                        <div className="flex flex-col items-end">
-                          <b>
-                            {coin.priceUSDToCrypto} {coin.symbol.toUpperCase()}
-                          </b>
-                          <small>{coin.priceCryptoToUSD} USD</small>
-
-                          {coin.price_change_percentage_24h > 0 ? (
-                            <Chip color="success" variant="flat">
-                              +{coin.price_change_percentage_24h}%
-                            </Chip>
-                          ) : (
-                            <Chip color="danger" variant="flat">
-                              {coin.price_change_percentage_24h}%
-                            </Chip>
-                          )}
-                        </div>
-                      </div>
-                    </CardBody>
-                  </Card>
-                ))
+                portfolio.map((coin: coin) => <PortfolioCoin coin={coin} />)
               )}
             </div>
           </section>

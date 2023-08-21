@@ -1,42 +1,46 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import {
   Table,
-  TableHeader,
   TableColumn,
+  TableHeader,
+  TableBody,
   TableCell,
   TableRow,
-  TableBody,
-  Spinner,
   Chip,
+  Spinner,
 } from '@nextui-org/react';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import CryptoChart from '@/components/CryptoChart';
 
-const Home = () => {
-  const [coins, setCoins] = useState([]);
+const SearchPage = () => {
+  const [coin, setCoin] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const coinParams = useSearchParams();
+  const coinName: any = coinParams.get('coin');
 
-  const getCoins = async () => {
+  const getCoinData = async () => {
     const res = await fetch(
-      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=%221h%2C%2024h%2C%207d%22&locale=en'
+      `https://api.coingecko.com/api/v3/coins/${coinName}?sparkline=true`
     );
-    const coins = await res.json();
+    const data = await res.json();
 
-    if (coins.error) {
-      return alert('Coins not found.');
+    if (data.error) {
+      return alert('Coin not found.');
     }
 
+    setCoin([data]);
     setIsLoading(false);
-    setCoins(coins);
-    return coins;
   };
 
   useEffect(() => {
-    getCoins();
-  }, []);
+    console.log(coinName);
+    setCoin([]);
+    getCoinData();
+  }, [coinName]);
 
   return (
     <Table aria-label="Coins data">
@@ -49,7 +53,7 @@ const Home = () => {
         <TableColumn>Last 7 days</TableColumn>
       </TableHeader>
       <TableBody
-        items={coins}
+        items={coin}
         isLoading={isLoading}
         loadingContent={<Spinner label="Loading..." />}
       >
@@ -63,14 +67,14 @@ const Home = () => {
                   pathname: '/coin',
                   query: {
                     id: coin.id,
-                    price: coin.current_price,
+                    price: coin.market_data.current_price.usd,
                     symbol: coin.symbol,
                   },
                 }}
                 key={coin.id}
               >
                 <img
-                  src={coin.image}
+                  src={coin.image.small}
                   alt={coin.name}
                   loading="lazy"
                   width={40}
@@ -79,25 +83,29 @@ const Home = () => {
                 {coin.name} <small>{coin.symbol.toUpperCase()}</small>
               </Link>
             </TableCell>
-            <TableCell>${coin.current_price.toLocaleString()}</TableCell>
-            {coin.price_change_percentage_24h > 0 ? (
+            <TableCell>
+              ${coin.market_data.current_price.usd.toLocaleString()}
+            </TableCell>
+            {coin.market_data.price_change_percentage_24h > 0 ? (
               <TableCell>
                 <Chip color="success" variant="flat">
-                  +{coin.price_change_percentage_24h}%
+                  +{coin.market_data.price_change_percentage_24h}%
                 </Chip>
               </TableCell>
             ) : (
               <TableCell>
                 <Chip color="danger" variant="flat">
-                  {coin.price_change_percentage_24h}%
+                  {coin.market_data.price_change_percentage_24h}%
                 </Chip>
               </TableCell>
             )}
 
-            <TableCell>${coin.market_cap.toLocaleString()}</TableCell>
+            <TableCell>
+              ${coin.market_data.market_cap.usd.toLocaleString()}
+            </TableCell>
 
-            <TableCell className='w-44'>
-              <CryptoChart coinData={coin.sparkline_in_7d.price} />
+            <TableCell className="w-44">
+              <CryptoChart coinData={coin.market_data.sparkline_7d.price} />
             </TableCell>
           </TableRow>
         )}
@@ -106,4 +114,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default SearchPage;
