@@ -68,7 +68,7 @@ const CryptoChart = ({ coinData }: any) => {
 		'Day 7',
 	];
 
-	const data = {
+	const data: any = {
 		labels,
 		datasets: [
 			{
