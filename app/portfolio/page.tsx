@@ -2,7 +2,6 @@
 
 import { FormEvent, useContext, useEffect, useRef, useState } from 'react';
 import { Input } from '@nextui-org/react';
-import { CoinContext } from '../page';
 
 import PortfolioCoin from '@/components/PortfolioCoin';
 import { API_URL } from '../consts/consts';
@@ -43,11 +42,9 @@ interface coin {
 }
 
 const Portfolio = () => {
-  const coinsCon = useContext(CoinContext);
   const [isAuth, setIsAuth] = useState(false);
   const [coins, setCoins] = useState([]);
   const [portfolio, setPortfolio]: any = useState([]);
-  console.log(coinsCon);
 
   const [crypto, setCrypto] = useState('bitcoin');
   const priceRef: any = useRef(0);
