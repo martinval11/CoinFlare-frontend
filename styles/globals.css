@@ -31,3 +31,13 @@ canvas {
   width: 150px !important;
   margin: 0 !important;
 }
+
+.link {
+  color: #3ca5ff;
+  outline: none;
+  transition: opacity 0.2s;
+}
+
+.link:hover {
+  opacity: 0.8;
+}

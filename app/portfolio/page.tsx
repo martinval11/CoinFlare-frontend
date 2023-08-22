@@ -1,7 +1,8 @@
 'use client';
 
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useContext, useEffect, useRef, useState } from 'react';
 import { Input } from '@nextui-org/react';
+import { CoinContext } from '../page';
 
 import PortfolioCoin from '@/components/PortfolioCoin';
 import { API_URL } from '../consts/consts';
@@ -42,15 +43,24 @@ interface coin {
 }
 
 const Portfolio = () => {
+  const coinsCon = useContext(CoinContext);
   const [isAuth, setIsAuth] = useState(false);
   const [coins, setCoins] = useState([]);
   const [portfolio, setPortfolio]: any = useState([]);
+  console.log(coinsCon);
 
   const [crypto, setCrypto] = useState('bitcoin');
   const priceRef: any = useRef(0);
 
   const getCoins = async () => {
     try {
+      const getLocalCoins = localStorage.getItem('coins');
+
+      if (getLocalCoins) {
+        setCoins(JSON.parse(getLocalCoins));
+        return JSON.parse(getLocalCoins);
+      }
+
       const res = await fetch(
         'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en'
       );

@@ -10,7 +10,6 @@ import {
 	NavbarMenuItem,
 } from '@nextui-org/navbar';
 import { Button } from '@nextui-org/button';
-import { Link } from '@nextui-org/link';
 import { Input } from '@nextui-org/input';
 
 import { siteConfig } from '@/config/site';
@@ -21,7 +20,8 @@ import { ThemeSwitch } from '@/components/theme-switch';
 import { GithubIcon, SearchIcon } from '@/components/icons';
 
 import { Logo } from '@/components/icons';
-import {useRouter} from 'next/navigation';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export const Navbar = () => {
 	const [isAuth, setIsAuth] = useState(false);
@@ -79,14 +79,20 @@ export const Navbar = () => {
 				justify="end"
 			>
 				<NavbarItem className="hidden sm:flex gap-2">
-					<Link isExternal href={siteConfig.links.github} aria-label="Github">
+					<Link
+						target="_blank"
+						href={siteConfig.links.github}
+						aria-label="Github"
+					>
 						<GithubIcon className="text-default-500" />
 					</Link>
 					<ThemeSwitch />
 				</NavbarItem>
 				<NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
 
-				<Link href="/portfolio">Portfolio</Link>
+				<Link href="/portfolio" className="link">
+					Portfolio
+				</Link>
 				{isAuth ? (
 					<Button color="primary" href="/" onClick={removeData}>
 						Logout
@@ -94,11 +100,12 @@ export const Navbar = () => {
 				) : (
 					<>
 						<NavbarItem>
-							<Link href="/login">Login</Link>
+							<Link href="/login" className="link">
+								Login
+							</Link>
 						</NavbarItem>
 						<NavbarItem className="hidden md:flex">
 							<Button
-								isExternal
 								as={Link}
 								className="text-sm font-normal text-default-600 bg-default-100"
 								href={siteConfig.links.signup}
@@ -112,7 +119,7 @@ export const Navbar = () => {
 			</NavbarContent>
 
 			<NavbarContent className="pl-4 sm:hidden basis-1" justify="end">
-				<Link isExternal href={siteConfig.links.github} aria-label="Github">
+				<Link href={siteConfig.links.github} aria-label="Github">
 					<GithubIcon className="text-default-500" />
 				</Link>
 				<ThemeSwitch />
@@ -123,33 +130,33 @@ export const Navbar = () => {
 				{searchInput}
 				<div className="flex flex-col mx-4 mt-2 gap-2">
 					<NavbarMenuItem>
-						<Link href="/" size="lg">
+						<Link href="/" className="link">
 							Home
 						</Link>
 					</NavbarMenuItem>
 
 					<NavbarMenuItem>
-						<Link href="/portfolio" size="lg">
+						<Link href="/portfolio" className="link">
 							Portfolio
 						</Link>
 					</NavbarMenuItem>
 
 					{isAuth ? (
 						<NavbarMenuItem>
-							<Link href="/" size="lg" onClick={removeData}>
+							<Link href="/" className="link" onClick={removeData}>
 								Logout
 							</Link>
 						</NavbarMenuItem>
 					) : (
 						<>
 							<NavbarMenuItem>
-								<Link href="/login" size="lg">
+								<Link href="/login" className="link">
 									Login
 								</Link>
 							</NavbarMenuItem>
 
 							<NavbarMenuItem>
-								<Link href="/portfolio" size="lg">
+								<Link href="/portfolio" className="link">
 									Sign Up
 								</Link>
 							</NavbarMenuItem>
