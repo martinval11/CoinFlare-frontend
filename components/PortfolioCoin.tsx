@@ -217,7 +217,7 @@ const PortfolioCoin = ({ coin, onChangeData }: any) => {
       <Modal
         isOpen={deleteModal.isOpen}
         onOpenChange={deleteModal.onOpenChange}
-        placement="top-center"
+        placement="center"
       >
         <ModalContent>
           {(onClose) => (

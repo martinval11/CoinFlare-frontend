@@ -1,7 +1,7 @@
 'use client';
 
-import { FormEvent, useContext, useEffect, useRef, useState } from 'react';
-import { Input } from '@nextui-org/react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { Input, Spinner } from '@nextui-org/react';
 
 import PortfolioCoin from '@/components/PortfolioCoin';
 import { API_URL } from '../consts/consts';
@@ -45,6 +45,7 @@ const Portfolio = () => {
   const [isAuth, setIsAuth] = useState(false);
   const [coins, setCoins] = useState([]);
   const [portfolio, setPortfolio]: any = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [crypto, setCrypto] = useState('bitcoin');
   const priceRef: any = useRef(0);
@@ -82,6 +83,7 @@ const Portfolio = () => {
     const portfolio = await res.json();
 
     setPortfolio(portfolio.portfolio);
+    setIsLoading(false);
     return portfolio.portfolio;
   };
 
@@ -144,75 +146,77 @@ const Portfolio = () => {
 
   return (
     <main>
-      {isAuth ? (
-        <div className="flex justify-center">
-          <section className="w-full md:w-7/12">
-            <h1>Portfolio</h1>
-            <form onSubmit={submitPortfolio}>
-              <h2 className="mt-1">Add a cryptocurrency</h2>
+      <div className="flex justify-center">
+        <section className="w-full md:w-7/12">
+          <h1>Portfolio</h1>
+          <form onSubmit={submitPortfolio}>
+            <h2 className="mt-1">Add a cryptocurrency</h2>
 
-              <label className="flex flex-col block mt-3">
-                <span>Select a cryptocurrency</span>
-                <select
-                  className="relative w-full inline-flex flex-row items-center shadow-sm px-3 gap-3 bg-default-100 data-[hover=true]:bg-default-200 group-data-[focus=true]:bg-default-100 h-unit-10 min-h-unit-10 rounded-medium transition-background motion-reduce:transition-none !duration-150 outline-none group-data-[focus-visible=true]:z-10 group-data-[focus-visible=true]:ring-2 group-data-[focus-visible=true]:ring-focus group-data-[focus-visible=true]:ring-offset-2 group-data-[focus-visible=true]:ring-offset-background is-filled"
-                  onChange={selectCryptoChange}
-                  value={crypto}
-                  required
-                >
-                  {coins.map((coin: coin) => (
-                    <option key={coin.id} value={coin.id}>
-                      {coin.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
+            <label className="flex flex-col block mt-3">
+              <span>Select a cryptocurrency</span>
+              <select
+                className="relative w-full inline-flex flex-row items-center shadow-sm px-3 gap-3 bg-default-100 data-[hover=true]:bg-default-200 group-data-[focus=true]:bg-default-100 h-unit-10 min-h-unit-10 rounded-medium transition-background motion-reduce:transition-none !duration-150 outline-none group-data-[focus-visible=true]:z-10 group-data-[focus-visible=true]:ring-2 group-data-[focus-visible=true]:ring-focus group-data-[focus-visible=true]:ring-offset-2 group-data-[focus-visible=true]:ring-offset-background is-filled"
+                onChange={selectCryptoChange}
+                value={crypto}
+                required
+              >
+                {coins.map((coin: coin) => (
+                  <option key={coin.id} value={coin.id}>
+                    {coin.name}
+                  </option>
+                ))}
+              </select>
+            </label>
 
-              <label className="block mt-3">
-                <span>Quantity (In USD)</span>
-                <Input
-                  type="text"
-                  ref={priceRef}
-                  placeholder="100"
-                  pattern="^\d+(.\d+)?$"
-                  title="Only numbers allowed. For example: 100, 100.5, 00010.0"
-                  isRequired
-                />
-              </label>
-
+            <label className="block mt-3">
+              <span>Quantity (In USD)</span>
               <Input
-                color="primary"
-                variant="flat"
-                type="submit"
-                value="Add"
-                className="mt-3"
+                type="text"
+                ref={priceRef}
+                placeholder="100"
+                pattern="^\d+(.\d+)?$"
+                title="Only numbers allowed. For example: 100, 100.5, 00010.0"
+                isRequired
               />
-            </form>
+            </label>
 
-            <div className="mt-3">
-              <h2>Balance</h2>
-              <h3>
-                $
-                {portfolio.reduce((acc: number, coin: coin) => {
-                  return acc + Number(coin.priceCryptoToUSD);
-                }, 0)}
-              </h3>
-              {portfolio.length === 0 ? (
-                <p>No coins added</p>
-              ) : (
-                portfolio.map((coin: coin) => (
-                  <PortfolioCoin
-                    coin={coin}
-                    key={coin.id}
-                    onChangeData={getPortfolio}
-                  />
-                ))
-              )}
-            </div>
-          </section>
-        </div>
-      ) : (
-        <h1>Loading, please wait...</h1>
-      )}
+            <Input
+              color="primary"
+              variant="flat"
+              type="submit"
+              value="Add"
+              className="mt-3"
+            />
+          </form>
+
+          <div className="mt-3">
+            {isAuth ? (
+              <>
+                <h2>Balance</h2>
+                <h3>
+                  $
+                  {portfolio.reduce((acc: number, coin: coin) => {
+                    return acc + Number(coin.priceCryptoToUSD);
+                  }, 0)}
+                </h3>
+                {isLoading ? <Spinner label="Loading Coins..." /> : null}
+
+                {!isLoading && portfolio.length === 0 ? (
+                  <p>No coins added</p>
+                ) : (
+                  portfolio.map((coin: coin) => (
+                    <PortfolioCoin
+                      coin={coin}
+                      key={coin.id}
+                      onChangeData={getPortfolio}
+                    />
+                  ))
+                )}
+              </>
+            ) : null}
+          </div>
+        </section>
+      </div>
     </main>
   );
 };
