@@ -15,6 +15,7 @@ import {
 } from '@nextui-org/react';
 
 import CryptoChart from '@/components/CryptoChart';
+import request from '../utils/request';
 
 const SearchPage = () => {
   const [coin, setCoin]: any = useState([]);
@@ -24,14 +25,10 @@ const SearchPage = () => {
 
   const getCoinData = async () => {
     try {
-      const res = await fetch(
+      const data: any = await request(
         `https://api.coingecko.com/api/v3/coins/${coinName}?sparkline=true`
-      );
-      const data: any = await res.json();
+      )
 
-      if (!res.ok) {
-        throw new Error(`Error: ${data.error}`);
-      }
       if (data.error) {
         return alert('Coin not found.');
       }
@@ -45,7 +42,6 @@ const SearchPage = () => {
   };
 
   useEffect(() => {
-    setCoin([]);
     getCoinData();
   }, [coinName]);
 

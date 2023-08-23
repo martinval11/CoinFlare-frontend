@@ -13,6 +13,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { useEffect, useState } from 'react';
+import request from '../utils/request';
 
 const Coin = () => {
 	const [coinData, setCoinData]: any = useState([]);
@@ -74,7 +75,16 @@ const Coin = () => {
 				borderWidth: 4,
 				borderJoinStyle: 'round',
 				borderCapStyle: 'round',
-				data: coinData?.prices?.map((item: any) => [item[0], item[1]]),
+				data: [
+					[coinData?.prices?.[0][0], coinData?.prices?.[0][1]],
+					[coinData?.prices?.[1][0], coinData?.prices?.[1][1]],
+					[coinData?.prices?.[2][0], coinData?.prices?.[2][1]],
+					[coinData?.prices?.[3][0], coinData?.prices?.[3][1]],
+					[coinData?.prices?.[4][0], coinData?.prices?.[4][1]],
+					[coinData?.prices?.[5][0], coinData?.prices?.[5][1]],
+					[coinData?.prices?.[6][0], coinData?.prices?.[6][1]],
+				],
+				//coinData?.prices?.map((item: any) => [item[0], item[1]]),
 				borderColor: '#60df60',
 				backgroundColor: '#60df60',
 			},
@@ -82,11 +92,9 @@ const Coin = () => {
 	};
 
 	const getCoinData = async () => {
-		const res = await fetch(
+		const coins = await request(
 			`https://api.coingecko.com/api/v3/coins/${coinName}/market_chart?vs_currency=usd&days=7`
 		);
-		const coins = await res.json();
-		console.log(coins);
 		setCoinData(coins);
 	};
 
@@ -103,7 +111,7 @@ const Coin = () => {
 				</div>
 				<h2>Current Price: ${coinPrice}</h2>
 			</div>
-			<Line options={options} data={data} className="mt-5" />
+			<Line options={options} data={data} className="mt-5" id="coin-canvas" />
 		</main>
 	);
 };

@@ -41,3 +41,12 @@ canvas {
 .link:hover {
   opacity: 0.8;
 }
+
+#coin-canvas {
+  display: block !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  height: auto !important;
+  width: auto !important;
+  margin: 0 !important;
+}

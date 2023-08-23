@@ -11,9 +11,10 @@ import {
   Chip,
 } from '@nextui-org/react';
 
-import { useEffect, useState, createContext } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import CryptoChart from '@/components/CryptoChart';
+import request from './utils/request';
 
 const Home = () => {
   const [coins, setCoins] = useState([]);
@@ -21,23 +22,19 @@ const Home = () => {
 
   const getCoins = async () => {
     const localCoins = localStorage.getItem('coins');
-    if (localCoins) {
-      console.log('entra');
+    if (localCoins && localCoins !== 'undefined') {
       setCoins(JSON.parse(localCoins));
       setIsLoading(false);
     }
 
-    const res = await fetch(
+    const coins = await request(
       'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=%221h%2C%2024h%2C%207d%22&locale=en'
     );
-    const coins = await res.json();
-
-    if (coins.error) {
-      return alert('Coins not found.');
-    }
 
     // cache coins
-    localStorage.setItem('coins', JSON.stringify(coins));
+    if (coins !== undefined) {
+      localStorage.setItem('coins', JSON.stringify(coins));
+    }
 
     setIsLoading(false);
     setCoins(coins);
