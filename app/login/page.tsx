@@ -6,7 +6,8 @@ import { API_URL } from '../consts/consts';
 import request from '../utils/request';
 
 import { decrypt } from '../utils/cipher';
-import { Link } from '@nextui-org/react';
+
+import { Link } from '@nextui-org/link';
 import { Input } from '@nextui-org/input';
 
 interface user {

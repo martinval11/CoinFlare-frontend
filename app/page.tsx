@@ -7,14 +7,16 @@ import {
   TableCell,
   TableRow,
   TableBody,
-  Spinner,
-  Chip,
-} from '@nextui-org/react';
+} from '@nextui-org/table';
 
-import { useEffect, useState } from 'react';
+import { Chip } from '@nextui-org/chip';
+import { Spinner } from '@nextui-org/spinner';
+
 import Link from 'next/link';
 import CryptoChart from '@/components/CryptoChart';
 import request from './utils/request';
+
+import { useEffect, useState } from 'react';
 
 const Home = () => {
   const [coins, setCoins] = useState([]);
@@ -40,7 +42,6 @@ const Home = () => {
     setCoins(coins);
     return coins;
   };
-
   useEffect(() => {
     getCoins();
   }, []);

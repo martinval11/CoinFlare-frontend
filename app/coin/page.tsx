@@ -12,6 +12,8 @@ import {
 	Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { Chip } from '@nextui-org/chip';
+
 import { useEffect, useState } from 'react';
 import request from '../utils/request';
 
@@ -19,8 +21,6 @@ const Coin = () => {
 	const [coinData, setCoinData]: any = useState([]);
 	const searchParams = useSearchParams();
 	const coinName: any = searchParams.get('id');
-	const coinPrice: any = searchParams.get('price');
-	const coinSymbol: any = searchParams.get('symbol');
 
 	ChartJS.register(
 		CategoryScale,
@@ -76,15 +76,15 @@ const Coin = () => {
 				borderJoinStyle: 'round',
 				borderCapStyle: 'round',
 				data: [
-					[coinData?.prices?.[0][0], coinData?.prices?.[0][1]],
-					[coinData?.prices?.[1][0], coinData?.prices?.[1][1]],
-					[coinData?.prices?.[2][0], coinData?.prices?.[2][1]],
-					[coinData?.prices?.[3][0], coinData?.prices?.[3][1]],
-					[coinData?.prices?.[4][0], coinData?.prices?.[4][1]],
-					[coinData?.prices?.[5][0], coinData?.prices?.[5][1]],
-					[coinData?.prices?.[6][0], coinData?.prices?.[6][1]],
+					coinData?.sparkline_in_7d?.price[0],
+					coinData?.sparkline_in_7d?.price[1],
+					coinData?.sparkline_in_7d?.price[2],
+					coinData?.sparkline_in_7d?.price[3],
+					coinData?.sparkline_in_7d?.price[4],
+					coinData?.sparkline_in_7d?.price[5],
+					coinData?.sparkline_in_7d?.price[6],
+					coinData?.sparkline_in_7d?.price[7],
 				],
-				//coinData?.prices?.map((item: any) => [item[0], item[1]]),
 				borderColor: '#60df60',
 				backgroundColor: '#60df60',
 			},
@@ -92,10 +92,27 @@ const Coin = () => {
 	};
 
 	const getCoinData = async () => {
-		const coins = await request(
-			`https://api.coingecko.com/api/v3/coins/${coinName}/market_chart?vs_currency=usd&days=7`
+		const localCoins = localStorage.getItem('coins');
+		if (localCoins && localCoins !== 'undefined') {
+			// find coin in local storage
+			const jsonCoinData = JSON.parse(localCoins);
+			const coin = jsonCoinData.find((item: any) => item.id === coinName);
+			if (coin) {
+				setCoinData(coin);
+			}
+			return;
+		}
+
+		const coins: any = await request(
+			'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=%221h%2C%2024h%2C%207d%22&locale=en'
 		);
-		setCoinData(coins);
+
+		const coin = coins.find((item: any) => item.id === coinName);
+		if (coin && coinData !== undefined) {
+			setCoinData(coin);
+			// cache coins
+			localStorage.setItem('coins', JSON.stringify(coins));
+		}
 	};
 
 	useEffect(() => {
@@ -104,14 +121,18 @@ const Coin = () => {
 
 	return (
 		<main>
-			<div>
+			<div className='mb-3'>
 				<div className="flex">
-					<h1>{coinName.charAt(0).toUpperCase() + coinName.slice(1)}</h1>
-					<small>{coinSymbol.toUpperCase()}</small>
+					<h1>{coinData?.name ?? 'Loading...'}</h1>
+					<small>{coinData?.symbol?.toUpperCase()}</small>
 				</div>
-				<h2>Current Price: ${coinPrice}</h2>
+
+				<Chip color="danger" variant="flat">
+					{coinData.price_change_percentage_24h}%
+				</Chip>
+				<h2>Current Price: ${coinData?.current_price}</h2>
 			</div>
-			<Line options={options} data={data} className="mt-5" id="coin-canvas" />
+			<Line options={options} data={data} id="coin-canvas" />
 		</main>
 	);
 };

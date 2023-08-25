@@ -1,20 +1,27 @@
 import {
   Card,
-  CardBody,
-  Chip,
+  CardBody
+} from '@nextui-org/card'
+
+import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+} from '@nextui-org/dropdown';
+
+import { 
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button,
   useDisclosure,
-  Input,
-} from '@nextui-org/react';
+ } from '@nextui-org/modal';
+
+import { Button } from '@nextui-org/button';
+import { Chip } from '@nextui-org/chip';
+import { Input } from '@nextui-org/input';
 
 import request from '@/app/utils/request';
 import { API_URL } from '@/app/consts/consts';

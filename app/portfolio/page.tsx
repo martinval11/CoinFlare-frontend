@@ -1,7 +1,9 @@
 'use client';
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
-import { Input, Spinner } from '@nextui-org/react';
+
+import { Input } from '@nextui-org/input';
+import { Spinner } from '@nextui-org/spinner';
 
 import PortfolioCoin from '@/components/PortfolioCoin';
 import { API_URL } from '../consts/consts';

@@ -10,9 +10,10 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  Chip,
-  Spinner,
-} from '@nextui-org/react';
+} from '@nextui-org/table';
+
+import { Chip } from '@nextui-org/chip';
+import { Spinner } from '@nextui-org/spinner';
 
 import CryptoChart from '@/components/CryptoChart';
 import request from '../utils/request';
@@ -27,7 +28,7 @@ const SearchPage = () => {
     try {
       const data: any = await request(
         `https://api.coingecko.com/api/v3/coins/${coinName}?sparkline=true`
-      )
+      );
 
       if (data.error) {
         return alert('Coin not found.');
