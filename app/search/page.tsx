@@ -25,20 +25,29 @@ const SearchPage = () => {
   const coinName: any = coinParams.get('coin');
 
   const getCoinData = async () => {
-    try {
-      const data: any = await request(
-        `https://api.coingecko.com/api/v3/coins/${coinName}?sparkline=true`
-      );
-
-      if (data.error) {
-        return alert('Coin not found.');
+    const localCoins = localStorage.getItem('coins');
+    if (localCoins && localCoins !== 'undefined') {
+      // find coin in local storage
+      const jsonCoinData = JSON.parse(localCoins);
+      const findCoin = jsonCoinData.find((item: any) => item.id === coinName);
+      if (findCoin) {
+        console.log(findCoin);
+        setCoin([findCoin]);
+        setIsLoading(false);
       }
+      return;
+    }
 
-      setCoin([data]);
+    const coins: any = await request(
+      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=%221h%2C%2024h%2C%207d%22&locale=en'
+    );
+
+    const findCoin = coins.find((item: any) => item.id === coinName);
+    if (findCoin && coin !== undefined) {
+      setCoin([findCoin]);
+      // cache coins
+      localStorage.setItem('coins', JSON.stringify(coins));
       setIsLoading(false);
-    } catch (error: any) {
-      alert('Error');
-      throw new Error(error);
     }
   };
 
@@ -62,7 +71,7 @@ const SearchPage = () => {
         loadingContent={<Spinner label="Loading..." />}
       >
         {(coin: any) => (
-          <TableRow key={coin.id}>
+          <TableRow>
             <TableCell>{coin.market_cap_rank}</TableCell>
             <TableCell>
               <Link
@@ -71,45 +80,41 @@ const SearchPage = () => {
                   pathname: '/coin',
                   query: {
                     id: coin.id,
-                    price: coin.market_data.current_price.usd,
+                    price: coin.current_price,
                     symbol: coin.symbol,
                   },
                 }}
                 key={coin.id}
               >
                 <img
-                  src={coin.image.small}
+                  src={coin.image}
                   alt={coin.name}
                   loading="lazy"
                   width={40}
                   height={40}
                 />
-                {coin.name} <small>{coin.symbol.toUpperCase()}</small>
+                {coin.name} <small>{coin?.symbol?.toUpperCase()}</small>
               </Link>
             </TableCell>
-            <TableCell>
-              ${coin.market_data.current_price.usd.toLocaleString()}
-            </TableCell>
-            {coin.market_data.price_change_percentage_24h > 0 ? (
+            <TableCell>${coin?.current_price?.toLocaleString()}</TableCell>
+            {coin.price_change_percentage_24h > 0 ? (
               <TableCell>
                 <Chip color="success" variant="flat">
-                  +{coin.market_data.price_change_percentage_24h}%
+                  +{coin.price_change_percentage_24h}%
                 </Chip>
               </TableCell>
             ) : (
               <TableCell>
                 <Chip color="danger" variant="flat">
-                  {coin.market_data.price_change_percentage_24h}%
+                  {coin.price_change_percentage_24h}%
                 </Chip>
               </TableCell>
             )}
 
-            <TableCell>
-              ${coin.market_data.market_cap.usd.toLocaleString()}
-            </TableCell>
+            <TableCell>${coin?.market_cap?.toLocaleString()}</TableCell>
 
             <TableCell className="w-44">
-              <CryptoChart coinData={coin.market_data.sparkline_7d.price} />
+              <CryptoChart coinData={coin?.sparkline_in_7d?.price} />
             </TableCell>
           </TableRow>
         )}

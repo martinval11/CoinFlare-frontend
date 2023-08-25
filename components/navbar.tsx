@@ -108,9 +108,9 @@ export const Navbar = () => {
             <NavbarItem className="hidden md:flex">
               <Button
                 as={Link}
-                className="text-sm font-normal text-default-600 bg-default-100"
                 href={siteConfig.links.signup}
-                variant="flat"
+                color="primary"
+                variant="solid"
               >
                 Sign Up
               </Button>
