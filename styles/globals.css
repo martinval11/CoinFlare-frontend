@@ -49,4 +49,5 @@ canvas {
   height: auto !important;
   width: auto !important;
   margin: 0 !important;
+  max-height: 400px !important;
 }
