@@ -61,7 +61,7 @@ const Login = () => {
       window.location.pathname = '/';
     } catch (error) {
       setIsLoading(false);
-      toast.error('An error occured, please try again later');
+			toast.error('Something went wrong. Please try again later');
       throw new Error(`Error: ${error}`);
     }
   };
@@ -81,7 +81,6 @@ const Login = () => {
           <span>Password</span>
 
           <Input
-						type="password"
 						placeholder="Your Password"
 						ref={pwdRef}
 						endContent={

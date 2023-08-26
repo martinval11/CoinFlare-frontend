@@ -5,6 +5,8 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Input } from '@nextui-org/input';
 import { Spinner } from '@nextui-org/spinner';
 
+import { Toaster, toast } from 'sonner';
+
 import PortfolioCoin from '@/components/PortfolioCoin';
 import { API_URL } from '../consts/consts';
 import request from '../utils/request';
@@ -56,7 +58,7 @@ const Portfolio = () => {
     try {
       const getLocalCoins = localStorage.getItem('coins');
 
-      if (getLocalCoins) {
+      if (getLocalCoins && getLocalCoins !== 'undefined') {
         setCoins(JSON.parse(getLocalCoins));
         return JSON.parse(getLocalCoins);
       }
@@ -68,6 +70,7 @@ const Portfolio = () => {
       setCoins(coins);
       return coins;
     } catch (error: any) {
+      toast.error('Something went wrong. Please try again later.');
       throw new Error(error);
     }
   };
@@ -75,12 +78,16 @@ const Portfolio = () => {
   const getPortfolio = async () => {
     const userAuth: any = localStorage.getItem('auth');
     const user = JSON.parse(userAuth);
-    const res = await fetch(`${API_URL}/user/${user._id}`);
-    const portfolio = await res.json();
 
-    setPortfolio(portfolio.portfolio);
-    setIsLoading(false);
-    return portfolio.portfolio;
+    try {
+      const portfolio: any = await request(`${API_URL}/user/${user._id}`);
+      setPortfolio(portfolio.portfolio);
+      setIsLoading(false);
+      return portfolio.portfolio;
+    } catch (error: any) {
+      toast.error('Something went wrong. Please try again later.');
+      throw new Error(error);
+    }
   };
 
   const selectCryptoChange = (event: any) => {
@@ -142,6 +149,7 @@ const Portfolio = () => {
 
   return (
     <main>
+      <Toaster richColors closeButton />
       <div className="flex justify-center">
         <section className="w-full md:w-7/12">
           <h1>Portfolio</h1>

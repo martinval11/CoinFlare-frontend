@@ -70,37 +70,43 @@ const SignUp = () => {
 			return;
 		}
 
-		const dbUsers = await request<ApiResponse | any>(`${API_URL}/users`);
+		try {
+			const dbUsers = await request<ApiResponse | any>(`${API_URL}/users`);
 
-		const userExist = dbUsers.find(
-			(user: any) =>
-				user.name === userRef.current?.value ||
-				user.email === emailRef.current?.value
-		);
+			const userExist = dbUsers.find(
+				(user: any) =>
+					user.name === userRef.current?.value ||
+					user.email === emailRef.current?.value
+			);
 
-		if (userExist) {
-			toast.error('Username already exist');
+			if (userExist) {
+				toast.error('Username already exist');
+				setIsLoading(false);
+				return;
+			}
+			const res: any = await request<ApiResponse>(`${API_URL}/createUser`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					name: userRef.current?.value,
+					email: emailRef.current?.value,
+					password: encrypt(pwdRef.current?.value),
+					portfolio: [],
+				}),
+			});
+			localStorage.setItem(
+				'auth',
+				JSON.stringify({ state: true, name: res.name, _id: res._id })
+			);
+
+			window.location.pathname = '/';
+		} catch (error) {
 			setIsLoading(false);
-			return;
+			toast.error('Something went wrong. Please try again later');
+			throw new Error(`Error: ${error}`);
 		}
-		const res: any = await request<ApiResponse>(`${API_URL}/createUser`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				name: userRef.current?.value,
-				email: emailRef.current?.value,
-				password: encrypt(pwdRef.current?.value),
-				portfolio: [],
-			}),
-		});
-		localStorage.setItem(
-			'auth',
-			JSON.stringify({ state: true, name: res.name, _id: res._id })
-		);
-
-		window.location.pathname = '/';
 		setIsLoading(false);
 	};
 
@@ -129,7 +135,6 @@ const SignUp = () => {
 				<label className="block mt-2">
 					<span>Password</span>
 					<Input
-						type="password"
 						placeholder="Your Password"
 						ref={pwdRef}
 						endContent={
