@@ -47,7 +47,7 @@ canvas {
   box-sizing: border-box !important;
   padding: 0 !important;
   height: auto !important;
-  width: auto !important;
+  width: 100% !important;
   margin: 0 !important;
   max-height: 400px !important;
 }
