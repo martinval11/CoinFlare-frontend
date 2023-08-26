@@ -27,9 +27,11 @@ import { useRouter } from 'next/navigation';
 export const Navbar = () => {
   const [isAuth, setIsAuth] = useState(false);
   const searchInputRef: any = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const removeData = () => {
+    setIsLoading(true);
     localStorage.removeItem('auth');
     window.location.reload();
   };
@@ -64,6 +66,43 @@ export const Navbar = () => {
     </form>
   );
 
+  const LogoutButton = () => {
+    return (
+      <Button
+        href="/"
+        onClick={removeData}
+        isLoading={isLoading}
+        spinner={
+          <svg
+            className="w-5 h-5 animate-spin text-current"
+            fill="none"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              fill="currentColor"
+            />
+          </svg>
+        }
+        type="submit"
+        variant="solid"
+        color="primary"
+      >
+        Logout
+      </Button>
+    );
+  };
+
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -95,9 +134,7 @@ export const Navbar = () => {
           Portfolio
         </Link>
         {isAuth ? (
-          <Button color="primary" href="/" onClick={removeData}>
-            Logout
-          </Button>
+          <LogoutButton />
         ) : (
           <>
             <NavbarItem>
@@ -108,9 +145,9 @@ export const Navbar = () => {
             <NavbarItem className="hidden md:flex">
               <Button
                 as={Link}
-                className="text-sm font-normal text-default-600 bg-default-100"
                 href={siteConfig.links.signup}
-                variant="flat"
+                color="primary"
+                variant="solid"
               >
                 Sign Up
               </Button>

@@ -5,6 +5,8 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Input } from '@nextui-org/input';
 import { Spinner } from '@nextui-org/spinner';
 
+import { Toaster, toast } from 'sonner';
+
 import PortfolioCoin from '@/components/PortfolioCoin';
 import { API_URL } from '../consts/consts';
 import request from '../utils/request';
@@ -56,24 +58,19 @@ const Portfolio = () => {
     try {
       const getLocalCoins = localStorage.getItem('coins');
 
-      if (getLocalCoins) {
+      if (getLocalCoins && getLocalCoins !== 'undefined') {
         setCoins(JSON.parse(getLocalCoins));
         return JSON.parse(getLocalCoins);
       }
 
-      const res = await fetch(
+      const coins: any = await request(
         'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en'
       );
-
-      if (!res.ok) {
-        alert(Error);
-        throw new Error(`Error: ${res.status}`);
-      }
-      const coins = await res.json();
 
       setCoins(coins);
       return coins;
     } catch (error: any) {
+      toast.error('Something went wrong. Please try again later.');
       throw new Error(error);
     }
   };
@@ -81,12 +78,16 @@ const Portfolio = () => {
   const getPortfolio = async () => {
     const userAuth: any = localStorage.getItem('auth');
     const user = JSON.parse(userAuth);
-    const res = await fetch(`${API_URL}/user/${user._id}`);
-    const portfolio = await res.json();
 
-    setPortfolio(portfolio.portfolio);
-    setIsLoading(false);
-    return portfolio.portfolio;
+    try {
+      const portfolio: any = await request(`${API_URL}/user/${user._id}`);
+      setPortfolio(portfolio.portfolio);
+      setIsLoading(false);
+      return portfolio.portfolio;
+    } catch (error: any) {
+      toast.error('Something went wrong. Please try again later.');
+      throw new Error(error);
+    }
   };
 
   const selectCryptoChange = (event: any) => {
@@ -148,6 +149,7 @@ const Portfolio = () => {
 
   return (
     <main>
+      <Toaster richColors closeButton />
       <div className="flex justify-center">
         <section className="w-full md:w-7/12">
           <h1>Portfolio</h1>

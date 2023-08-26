@@ -23,24 +23,29 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const getCoins = async () => {
-    const localCoins = localStorage.getItem('coins');
-    if (localCoins && localCoins !== 'undefined') {
-      setCoins(JSON.parse(localCoins));
+    try {
+      const localCoins = localStorage.getItem('coins');
+      if (localCoins && localCoins !== 'undefined') {
+        setCoins(JSON.parse(localCoins));
+        setIsLoading(false);
+      }
+
+      const coins: any = await request(
+        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=%221h%2C%2024h%2C%207d%22&locale=en'
+      );
+
+      // cache coins
+      if (coins !== undefined) {
+        localStorage.setItem('coins', JSON.stringify(coins));
+      }
+
       setIsLoading(false);
+      setCoins(coins);
+      return coins;
+    } catch (error: any) {
+      alert('Something went wrong');
+      throw new Error(error);
     }
-
-    const coins: any = await request(
-      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=%221h%2C%2024h%2C%207d%22&locale=en'
-    );
-
-    // cache coins
-    if (coins !== undefined) {
-      localStorage.setItem('coins', JSON.stringify(coins));
-    }
-
-    setIsLoading(false);
-    setCoins(coins);
-    return coins;
   };
   useEffect(() => {
     getCoins();
