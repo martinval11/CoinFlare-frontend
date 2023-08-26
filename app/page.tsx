@@ -13,6 +13,7 @@ import { Chip } from '@nextui-org/chip';
 import { Spinner } from '@nextui-org/spinner';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import CryptoChart from '@/components/CryptoChart';
 import request from './utils/request';
 
@@ -83,7 +84,7 @@ const Home = () => {
                 }}
                 key={coin.id}
               >
-                <img
+                <Image
                   src={coin.image}
                   alt={coin.name}
                   loading="lazy"

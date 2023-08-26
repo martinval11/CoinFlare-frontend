@@ -22,6 +22,8 @@ import { Input } from '@nextui-org/input';
 
 import { Toaster, toast } from 'sonner';
 
+import Image from 'next/image';
+
 import request from '@/app/utils/request';
 import { API_URL } from '@/app/consts/consts';
 import { useRef, useState } from 'react';
@@ -138,7 +140,7 @@ const PortfolioCoin = ({ coin, onChangeData }: any) => {
         <CardBody>
           <div id="cardFlexContainer" className="flex">
             <div className="flex items-center gap-2">
-              <img
+              <Image
                 src={coin.image}
                 alt={coin.name}
                 loading="lazy"
